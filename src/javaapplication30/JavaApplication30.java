@@ -23,9 +23,10 @@ public class JavaApplication30 {
      */
     public static void main(String[] args) throws IOException {
         conversor nuevo= new conversor();
-        nuevo.binary("3482474166");
-        nuevo.ascii("01001100 01101111 01101100 01100001");
+        nuevo.binary("Hola");
+        //nuevo.ascii("01001100 01101111 01101100 01100001");
         nuevo.redundancia();
+        nuevo.deteccion();
         //nuevo.archivoAB();
         
     }
