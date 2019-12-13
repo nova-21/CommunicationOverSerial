@@ -143,7 +143,11 @@ public class conversor {
         }
   
     
-    public void tramas() {
+    
+    
+    }
+    
+    public void entramado() {
         tramas = new ArrayList();
         String code = "01111110";
         String trama = "";
@@ -157,8 +161,6 @@ public class conversor {
             tramas.add(trama);
         }
     }
-    
-
 
     public void ascii(String s) {
         String s2 = "";
