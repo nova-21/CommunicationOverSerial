@@ -22,6 +22,7 @@ import java.util.zip.CRC32;
 public class conversor {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
+    private int divisor=10110;
     ArrayList<String> mensajes;
 
     public void binary(String me) {
@@ -58,10 +59,10 @@ public class conversor {
     }
     
     public void redundancia(){
-        int divisor=10110;
+        
         int contador=0;
         for(String men:mensajes){
-            int dividend=Integer.parseInt(men.toString()+"0000");
+            int dividend=Integer.parseInt(men+"0000");
             String quotient = Integer.toBinaryString((dividend/divisor));
             String remainder = Integer.toBinaryString((dividend%divisor));
             mensajes.set(contador, mensajes.get(contador)+remainder);
