@@ -26,6 +26,7 @@ public class conversor {
     private String divisor = "1011";
 
     ArrayList<String> mensajes;
+    ArrayList<String> tramas;
 
     ArrayList<String> recibidos;
 
@@ -118,6 +119,7 @@ public class conversor {
         }
     }
 
+
     public void deteccion() {
         recibidos = mensajes;
 
@@ -139,8 +141,24 @@ public class conversor {
         for (String men : mensajeRec) {
             System.out.println(men);
         }
-
+  
+    
+    public void tramas() {
+        tramas = new ArrayList();
+        String code = "01111110";
+        String trama = "";
+        for(int i=0; i<mensajes.size(); i++) {
+            trama = "";
+            trama += code;
+            trama += mensajes.get(i);
+            trama += code;
+            
+            System.out.println("Trama " + (i+1) + ": " + trama + "\n");
+            tramas.add(trama);
+        }
     }
+    
+
 
     public void ascii(String s) {
         String s2 = "";
