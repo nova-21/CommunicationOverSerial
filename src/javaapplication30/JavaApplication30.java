@@ -26,6 +26,8 @@ public class JavaApplication30 {
         nuevo.binary("3482474166");
         nuevo.ascii("01001100 01101111 01101100 01100001");
         nuevo.redundancia();
+        System.out.println("Entramado");
+        nuevo.entramado();
         //nuevo.archivoAB();
         
     }

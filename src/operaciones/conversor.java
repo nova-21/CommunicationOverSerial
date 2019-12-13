@@ -24,6 +24,7 @@ public class conversor {
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private int divisor=10110;
     ArrayList<String> mensajes;
+    ArrayList<String> tramas;
 
     public void binary(String me) {
         String text = me;
@@ -72,6 +73,21 @@ public class conversor {
         
         for(Object men:mensajes){
             System.out.println(men);
+        }
+    }
+    
+    public void entramado() {
+        tramas = new ArrayList();
+        String code = "01111110";
+        String trama = "";
+        for(int i=0; i<mensajes.size(); i++) {
+            trama = "";
+            trama += code;
+            trama += mensajes.get(i);
+            trama += code;
+            
+            System.out.println("Trama " + (i+1) + ": " + trama + "\n");
+            tramas.add(trama);
         }
     }
     
