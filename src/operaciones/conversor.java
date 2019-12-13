@@ -27,6 +27,7 @@ public class conversor {
 
     ArrayList<String> mensajes;
     ArrayList<String> tramas;
+    ArrayList<String> desentramado;
 
     ArrayList<String> recibidos;
 
@@ -121,7 +122,7 @@ public class conversor {
 
 
     public void deteccion() {
-        recibidos = mensajes;
+        recibidos = desentramado;
 
         for (String men : recibidos) {
             String dividend = men;
@@ -159,6 +160,17 @@ public class conversor {
             
             System.out.println("Trama " + (i+1) + ": " + trama + "\n");
             tramas.add(trama);
+        }
+    }
+    
+    public void desentramado(){
+         desentramado= new ArrayList<String>();
+        for(String trama: tramas){
+            desentramado.add(trama.substring(8,trama.length()- 8));
+        }
+        
+        for (String men : desentramado) {
+            System.out.println(men);
         }
     }
 

@@ -23,12 +23,17 @@ public class JavaApplication30 {
      */
     public static void main(String[] args) throws IOException {
         conversor nuevo= new conversor();
-        nuevo.binary("Hola");
+        nuevo.binary("Uno dos tres");
         //nuevo.ascii("01001100 01101111 01101100 01100001");
         nuevo.redundancia();
-        nuevo.deteccion();
+        
         System.out.println("Entramado");
         nuevo.entramado();
+        
+        System.out.println("Desentramado");
+        nuevo.desentramado();
+        
+        nuevo.deteccion();
         //nuevo.archivoAB();
         
     }
