@@ -7,6 +7,7 @@ package model;
 
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.zip.CRC32;
 
 /**
  *
@@ -33,6 +34,36 @@ public class Converter {
         }
         
         return binary;        
+    }
+    
+    public static String toAscii(ArrayList<String> binary) {
+        StringBuilder sBinary = new StringBuilder();
+        for(String b: binary) {
+            sBinary.append(b);
+        }
+        
+        return toAsciiImplementation(sBinary.toString());
+    }
+    
+    public static String toAscii(String binary) {
+        return toAsciiImplementation(binary);
+    }
+    
+    private static String toAsciiImplementation(String binary) {
+        String text = "";
+        char nextChar = 0;
+        
+        for(int i=0; i<=binary.length() - 8; i+=9) { //this is a little tricky.  we want [0, 7], [9, 16], etc (increment index by 9 if bytes are space-delimited)
+            nextChar = (char) Integer.parseInt(binary.substring(i, i + 8), 2);
+            text += nextChar;
+        }
+        
+        CRC32 re= new CRC32();
+        re.update(text.getBytes());
+        System.out.println(re.getValue());
+        System.out.println(text);
+        
+        return text;
     }
     
 }
