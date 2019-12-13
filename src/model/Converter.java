@@ -36,20 +36,21 @@ public class Converter {
         return binary;        
     }
     
-    public static String toAscii(ArrayList<String> binary) {
+    public static String fromBinary(ArrayList<String> binary) {
         StringBuilder sBinary = new StringBuilder();
         for(String b: binary) {
             sBinary.append(b);
+            sBinary.append(' ');
         }
         
-        return toAsciiImplementation(sBinary.toString());
+        return fromBinaryImplementation(sBinary.toString());
     }
     
-    public static String toAscii(String binary) {
-        return toAsciiImplementation(binary);
+    public static String fromBinary(String binary) {
+        return fromBinaryImplementation(binary);
     }
     
-    private static String toAsciiImplementation(String binary) {
+    private static String fromBinaryImplementation(String binary) {
         String text = "";
         char nextChar = 0;
         
@@ -64,6 +65,14 @@ public class Converter {
         System.out.println(text);
         
         return text;
+    }
+    
+    public static ArrayList<Byte> toAscii(String msg) {
+        ArrayList<Byte> codes = new ArrayList();
+        for(int i=0; i<msg.length(); i++) 
+            codes.add((byte) msg.charAt(i));
+        
+        return codes;
     }
     
 }
