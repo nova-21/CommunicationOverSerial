@@ -31,10 +31,10 @@ public class View extends javax.swing.JFrame {
         jTextArea1 = new javax.swing.JTextArea();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTextArea2 = new javax.swing.JTextArea();
-        jButton1 = new javax.swing.JButton();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        jCheckBox2 = new javax.swing.JCheckBox();
-        jButton2 = new javax.swing.JButton();
+        btnEnviar = new javax.swing.JButton();
+        chkPerdidaTrama = new javax.swing.JCheckBox();
+        chkError = new javax.swing.JCheckBox();
+        btnBinario = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         jTextArea3 = new javax.swing.JTextArea();
         jScrollPane4 = new javax.swing.JScrollPane();
@@ -54,13 +54,13 @@ public class View extends javax.swing.JFrame {
         jTextArea2.setRows(5);
         jScrollPane2.setViewportView(jTextArea2);
 
-        jButton1.setText("Enviar");
+        btnEnviar.setText("Enviar");
 
-        jCheckBox1.setText("Perdida de trama");
+        chkPerdidaTrama.setText("Perdida de trama");
 
-        jCheckBox2.setText("Error en recibo");
+        chkError.setText("Error en recibo");
 
-        jButton2.setText("A binario");
+        btnBinario.setText("A binario");
 
         jTextArea3.setColumns(20);
         jTextArea3.setRows(5);
@@ -87,15 +87,15 @@ public class View extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jButton2)
+                            .addComponent(btnBinario)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                 .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING)
                                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 291, Short.MAX_VALUE)))
                         .addGap(50, 50, 50)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jCheckBox2)
-                            .addComponent(jCheckBox1)
-                            .addComponent(jButton1)))
+                            .addComponent(chkError)
+                            .addComponent(chkPerdidaTrama)
+                            .addComponent(btnEnviar)))
                     .addComponent(jLabel2)
                     .addComponent(jLabel3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
@@ -120,13 +120,13 @@ public class View extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(jCheckBox2)
+                                .addComponent(chkError)
                                 .addGap(18, 18, 18)
-                                .addComponent(jCheckBox1)
+                                .addComponent(chkPerdidaTrama)
                                 .addGap(29, 29, 29)
-                                .addComponent(jButton1)))
+                                .addComponent(btnEnviar)))
                         .addGap(18, 18, 18)
-                        .addComponent(jButton2))
+                        .addComponent(btnBinario))
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(4, 4, 4)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -179,10 +179,10 @@ public class View extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JCheckBox jCheckBox2;
+    public javax.swing.JButton btnBinario;
+    public javax.swing.JButton btnEnviar;
+    public javax.swing.JCheckBox chkError;
+    public javax.swing.JCheckBox chkPerdidaTrama;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -191,9 +191,9 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JTextArea jTextArea2;
-    private javax.swing.JTextArea jTextArea3;
-    private javax.swing.JTextArea jTextArea4;
+    public javax.swing.JTextArea jTextArea1;
+    public javax.swing.JTextArea jTextArea2;
+    public javax.swing.JTextArea jTextArea3;
+    public javax.swing.JTextArea jTextArea4;
     // End of variables declaration//GEN-END:variables
 }
