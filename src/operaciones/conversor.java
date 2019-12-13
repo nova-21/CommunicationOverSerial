@@ -11,6 +11,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.zip.CRC32;
 
 /**
  *
@@ -19,23 +22,60 @@ import java.nio.charset.Charset;
 public class conversor {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
+    ArrayList<String> mensajes;
 
     public void binary(String me) {
         String text = me;
         byte[] bytes = text.getBytes(UTF_8);
+        mensajes= new ArrayList();
+        
         StringBuilder binary = new StringBuilder();
         for (byte b : bytes) {
+            StringBuilder fila = new StringBuilder();
             int val = b;
             for (int i = 0; i < 8; i++) {
                 binary.append((val & 128) == 0 ? 0 : 1);
+                fila.append((val & 128) == 0 ? 0 : 1);
                 val <<= 1;
             }
+            
+            mensajes.add(fila.toString());            
             binary.append(' ');
         }
+        
+        for(Object men:mensajes){
+            System.out.println(men);
+        }
+        /*CRC32 re= new CRC32();
+        re.update(bytes);
+        
+        System.out.println(re.getValue());*/
+        
         System.out.println("'" + text + "' to binary: " + binary);
-        System.out.println("bytes= " + bytes[0]);
-        System.out.println("text again= " + new String(bytes, UTF_8));
-        System.out.println("Hola");
+        //System.out.println("bytes= " + bytes[0]);
+        //System.out.println("text again= " + new String(bytes, UTF_8));
+        //System.out.println("Hola");
+    }
+    
+    public void redundancia(){
+        int divisor=10110;
+        int contador=0;
+        for(String men:mensajes){
+            int dividend=Integer.parseInt(men.toString()+"0000");
+            String quotient = Integer.toBinaryString((dividend/divisor));
+            String remainder = Integer.toBinaryString((dividend%divisor));
+            mensajes.set(contador, mensajes.get(contador)+remainder);
+            System.out.println("\nquotient is: "+quotient+" and remainder is: "+remainder);
+            contador++;
+        }
+        
+        for(Object men:mensajes){
+            System.out.println(men);
+        }
+    }
+    
+    public void deteccion(){
+        
     }
 
     public void ascii(String s) {
@@ -47,6 +87,14 @@ public class conversor {
             nextChar = (char) Integer.parseInt(s.substring(i, i + 8), 2);
             s2 += nextChar;
         }
+        
+        CRC32 re= new CRC32();
+        re.update(s2.getBytes());
+        
+        System.out.println(re.getValue());
+        
+        System.out.println(s2);
+        
     }
 
     public void toAscii(byte[] bytes) {
