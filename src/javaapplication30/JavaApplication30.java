@@ -5,10 +5,12 @@
  */
 package javaapplication30;
 
+import controlador.controlador;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.Arrays;
-import operaciones.conversor;
+import operaciones.Conversor;
+import vistas.Vista;
 
 /**
  *
@@ -22,18 +24,24 @@ public class JavaApplication30 {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws IOException {
-        conversor nuevo= new conversor();
-        nuevo.binary("Uno dos tres");
+        Vista view= new Vista();
+        view.setVisible(true);
+        controlador control= new controlador(view);
+        
+        
+        
+        Conversor nuevo= new Conversor();
+        //nuevo.binary("Uno dos tres");
         //nuevo.ascii("01001100 01101111 01101100 01100001");
-        nuevo.redundancia();
+        //nuevo.redundancia();
         
-        System.out.println("Entramado");
-        nuevo.entramado();
+        //System.out.println("Entramado");
+        //nuevo.entramado();
         
-        System.out.println("Desentramado");
-        nuevo.desentramado();
+        //System.out.println("Desentramado");
+        //nuevo.desentramado();
         
-        nuevo.deteccion();
+        //nuevo.deteccion();
         //nuevo.archivoAB();
         
     }

@@ -20,7 +20,7 @@ import java.util.zip.CRC32;
  *
  * @author David
  */
-public class conversor {
+public class Conversor {
 
     private static final Charset UTF_8 = Charset.forName("UTF-8");
     private String divisor = "1011";
@@ -33,7 +33,7 @@ public class conversor {
 
     ArrayList<String> mensajeRec = new ArrayList();
 
-    public void binary(String me) {
+    public ArrayList<String> binary(String me) {
         String text = me;
         byte[] bytes = text.getBytes(UTF_8);
         mensajes = new ArrayList();
@@ -59,6 +59,7 @@ public class conversor {
         //System.out.println("bytes= " + bytes[0]);
         //System.out.println("text again= " + new String(bytes, UTF_8));
         //System.out.println("Hola");
+        return this.mensajes;
     }
 
     static String div(String code, String gen) {
@@ -101,7 +102,7 @@ public class conversor {
         return rem.substring(1, rem.length());
     }
 
-    public void redundancia() {
+    public ArrayList<String> redundancia(ArrayList<String> mensajes) {
 
         int contador = 0;
         for (String men : mensajes) {
@@ -114,67 +115,56 @@ public class conversor {
             contador++;
 
         }
-        System.out.println("Mensajes con redundancia");
+
+        /*System.out.println("Mensajes con redundancia");
         for (Object men : mensajes) {
             System.out.println(men);
-        }
+        }*/
+        return mensajes;
     }
 
+    public int deteccion(String men) {
 
-    public void deteccion() {
-        recibidos = desentramado;
+        int resultado;
 
-        for (String men : recibidos) {
-            String dividend = men;
-            String remainder = div(dividend, divisor);
-            //System.out.println(remainder);
-            if (Integer.parseInt(remainder) == 0) {
-                mensajeRec.add("Correcto");
-            } else {
-                mensajeRec.add("Retransmitir");
-            }
-
-            //System.out.println("Remainder is: " + remainder);
-            //contador++;
+        String dividend = men;
+        String remainder = div(dividend, divisor);
+        //System.out.println(remainder);
+        if (Integer.parseInt(remainder) == 0) {
+            resultado = 1;
+        } else {
+            resultado = 0;
         }
 
-        System.out.println("Deteccion de errores");
-        for (String men : mensajeRec) {
-            System.out.println(men);
-        }
-  
-    
-    
-    
+        //System.out.println("Remainder is: " + remainder);
+        //contador++;
+        return resultado;
+
     }
-    
-    public void entramado() {
+
+    public ArrayList<String> entramado(ArrayList<String> mensajes) {
         tramas = new ArrayList();
         String code = "01111110";
         String trama = "";
-        for(int i=0; i<mensajes.size(); i++) {
+        for (int i = 0; i < mensajes.size(); i++) {
             trama = "";
             trama += code;
             trama += mensajes.get(i);
             trama += code;
-            
-            System.out.println("Trama " + (i+1) + ": " + trama + "\n");
+
+            //System.out.println("Trama " + (i + 1) + ": " + trama + "\n");
             tramas.add(trama);
         }
-    }
-    
-    public void desentramado(){
-         desentramado= new ArrayList<String>();
-        for(String trama: tramas){
-            desentramado.add(trama.substring(8,trama.length()- 8));
-        }
-        
-        for (String men : desentramado) {
-            System.out.println(men);
-        }
+        return tramas;
     }
 
-    public void ascii(String s) {
+    public String desentramado(String trama) {
+        return trama.substring(8, trama.length() - 8);
+    }
+    
+    
+
+    public String ascii(String s) {
         String s2 = "";
         char nextChar;
 
@@ -183,14 +173,7 @@ public class conversor {
             nextChar = (char) Integer.parseInt(s.substring(i, i + 8), 2);
             s2 += nextChar;
         }
-
-        CRC32 re = new CRC32();
-        re.update(s2.getBytes());
-
-        System.out.println(re.getValue());
-
-        System.out.println(s2);
-
+return s2;
     }
 
     public void toAscii(byte[] bytes) {
