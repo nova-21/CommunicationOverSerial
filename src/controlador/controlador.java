@@ -24,31 +24,36 @@ import vistas.Vista;
  * @author David
  */
 public class controlador implements ActionListener {
-    
+
     private Vista view;
-    private int error=0;
-    private int perdida=0;
-    static ServerSocket serverSocket; 
+    private int error = 0;
+    private int perdida = 0;
+    private ServerSocket serverSocket;
+    private Socket socket;
     private Conversor convertir = new Conversor();
     private ArrayList<String> textoBinario = new ArrayList<String>();
     private ArrayList<String> textoRedundancia = new ArrayList<String>();
     private ArrayList<String> textoEntramado = new ArrayList<String>();
 
     public controlador(Vista view) {
-        try { 
-            serverSocket= new ServerSocket(1201);
-        } catch (IOException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
-; 
+        
 
         this.view = view;
         this.view.btnEnviar.addActionListener(this);
         this.view.btnLimpiar.addActionListener(this);
-
-        servidor();
-               
+        try {
+            serverSocket = new ServerSocket(3000);
+        } catch (IOException ex) {
+            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
+        (new Thread(new Runnable(){
+            //private ServerSocket serverSocket;
+                @Override
+                public void run(){
+        servidor();
+                }})).start();
+
     }
 
     private synchronized void enviar() {
@@ -91,12 +96,16 @@ public class controlador implements ActionListener {
         }
     }
 
-    private synchronized void transporte(){
+    private synchronized void transporte() {
         EnviarHilo enviar = new EnviarHilo();
-        Thread hilo= new Thread(enviar);
+        Thread hilo = new Thread(enviar);
         hilo.start();
         try {
-            enviar.transporte(textoEntramado,error,perdida);
+            try {
+                enviar.transporte(textoEntramado,socket, error, perdida);
+            } catch (IOException ex) {
+                Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+            }
         } catch (InterruptedException ex) {
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -106,34 +115,34 @@ public class controlador implements ActionListener {
         RecibirHilo recibir = new RecibirHilo();
         Thread hilo = new Thread(recibir);
         hilo.start();
-        recibir.servidor(this.view,serverSocket);
+        recibir.servidor(this.view, serverSocket, socket);
     }
 
     @Override
     public synchronized void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(view.btnEnviar)) {
-            if(this.view.ckError.isSelected()){
-                error=1;
-                
-            }else{
-                error=0;
+            if (this.view.ckError.isSelected()) {
+                error = 1;
+
+            } else {
+                error = 0;
             }
-            
-            if(this.view.ckPerdida.isSelected()){
-                perdida=1;
-            }else{
-                perdida=0;
+
+            if (this.view.ckPerdida.isSelected()) {
+                perdida = 1;
+            } else {
+                perdida = 0;
             }
-            
-            new Thread(new Runnable(){
+
+            new Thread(new Runnable() {
                 @Override
-                public void run(){
+                public void run() {
                     enviar();
                 }
             }).start();
-            
+
         }
-        
+
         if (e.getSource().equals(view.btnLimpiar)) {
             servidor();
         }

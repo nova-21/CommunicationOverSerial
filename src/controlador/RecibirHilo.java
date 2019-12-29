@@ -5,15 +5,18 @@
  */
 package controlador;
 
+//import static controlador.EnviarHilo.socket;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
-import static java.lang.Thread.sleep;
+//import static java.lang.Thread.sleep;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import operaciones.Conversor;
 import vistas.Vista;
 
@@ -23,28 +26,40 @@ import vistas.Vista;
  */
 public class RecibirHilo implements Runnable {
 
-    static ServerSocket serverSocket;
-    static Socket socket;
-    static DataInputStream entrada;
-    static DataOutputStream salida;
+    private ServerSocket serverSocket;
+    //private Socket socket;
+    //private  DataInputStream entrada;
+    //private DataOutputStream salida;
     private Conversor convertir = new Conversor();
     private ArrayList<String> mensajesCorrectos = new ArrayList<String>();
     private Vista view;
+    
 
-    public void servidor(Vista view, ServerSocket serverSocket) {
+    public void servidor(Vista view, ServerSocket sa,Socket ss) {
         this.view = view;
-        this.serverSocket=serverSocket;
+        this.serverSocket=sa;
+        //this.socket=socket;
+        
         new Thread(new Runnable(){
+            //private ServerSocket serverSocket;
                 @Override
                 public void run(){
+               
+                    
+                
+
                     
         
         try {
             
+             //System.out.print(socket.getPort());
             
-            socket = serverSocket.accept();
-            entrada = new DataInputStream(socket.getInputStream());
-            salida = new DataOutputStream(socket.getOutputStream());
+            //serverSocket = new ServerSocket(4000);
+            Socket socket = serverSocket.accept();
+             System.out.print(socket.getPort());
+            System.out.println(socket.getSoTimeout());
+            DataInputStream entrada = new DataInputStream(socket.getInputStream());
+            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
             String mensaje = "";
             char caracterIngreso = 0;
             while (caracterIngreso != 'a') {
@@ -54,6 +69,8 @@ public class RecibirHilo implements Runnable {
                 String verificar = "";
 
                 for (int i = 0; i < 27; i++) {
+                    
+                    
                     caracterIngreso = entrada.readChar();
                     if (caracterIngreso == 'a') {
                         break;
@@ -82,21 +99,23 @@ public class RecibirHilo implements Runnable {
                 System.out.println(desentramado);
                 view.jTextArea4.setText(view.jTextArea4.getText() + "\n");
             }
-
+try {
+            entrada.close();
+            salida.close();
+            socket.close();
+            //serverSocket.close();
+        } catch (IOException ex) {
+            Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }catch (SocketException ex) {
+            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
 
         System.out.println("fin");
         
-        try {
-            entrada.close();
-            salida.close();
-            //socket.close();
-            serverSocket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         mostrar();
                 }
             }).start();
