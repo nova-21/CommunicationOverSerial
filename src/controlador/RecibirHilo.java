@@ -35,7 +35,7 @@ public class RecibirHilo implements Runnable {
     private Vista view;
     
 
-    public void servidor(Vista view, ServerSocket sa,Socket ss) {
+    public void servidor(Vista view, ServerSocket sa) {
         this.view = view;
         this.serverSocket=sa;
         //this.socket=socket;

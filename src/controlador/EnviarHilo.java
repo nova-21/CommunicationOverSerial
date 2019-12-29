@@ -32,14 +32,14 @@ public class EnviarHilo implements Runnable {
     private String control = "";
     private int respuesta = -1;
 
-    public void transporte(ArrayList<String> textoEntramado, Socket ss, int error, int perdida) throws InterruptedException, IOException {
+    public void transporte(ArrayList<String> textoEntramado, int error, int perdida) throws InterruptedException, IOException {
         int randomNum = ThreadLocalRandom.current().nextInt(0, textoEntramado.size());
         this.error = error;
         int controlTotal = 0;
         
          
         
-            Socket socket = new Socket("127.0.0.1", 4000);
+            Socket socket = new Socket("127.0.0.1", 3000);
             DataInputStream entrada = new DataInputStream(socket.getInputStream());
             DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
         

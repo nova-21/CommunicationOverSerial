@@ -42,7 +42,7 @@ public class controlador implements ActionListener {
         this.view.btnEnviar.addActionListener(this);
         this.view.btnLimpiar.addActionListener(this);
         try {
-            serverSocket = new ServerSocket(3000);
+            serverSocket = new ServerSocket(4000);
         } catch (IOException ex) {
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -102,7 +102,7 @@ public class controlador implements ActionListener {
         hilo.start();
         try {
             try {
-                enviar.transporte(textoEntramado,socket, error, perdida);
+                enviar.transporte(textoEntramado, error, perdida);
             } catch (IOException ex) {
                 Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -115,7 +115,7 @@ public class controlador implements ActionListener {
         RecibirHilo recibir = new RecibirHilo();
         Thread hilo = new Thread(recibir);
         hilo.start();
-        recibir.servidor(this.view, serverSocket, socket);
+        recibir.servidor(this.view, serverSocket);
     }
 
     @Override
