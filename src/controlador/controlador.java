@@ -102,7 +102,7 @@ public class controlador implements ActionListener {
         hilo.start();
         try {
             try {
-                enviar.transporte(textoEntramado, error, perdida);
+                enviar.transporte(view,textoEntramado, error, perdida);
             } catch (IOException ex) {
                 Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
             }

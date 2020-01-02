@@ -33,95 +33,83 @@ public class RecibirHilo implements Runnable {
     private Conversor convertir = new Conversor();
     private ArrayList<String> mensajesCorrectos = new ArrayList<String>();
     private Vista view;
-    
 
     public void servidor(Vista view, ServerSocket sa) {
         this.view = view;
-        this.serverSocket=sa;
+        this.serverSocket = sa;
         //this.socket=socket;
-        
-        new Thread(new Runnable(){
+
+        new Thread(new Runnable() {
             //private ServerSocket serverSocket;
-                @Override
-                public void run(){
-               
+            @Override
+            public void run() {
+
+                try {
+
+                    //System.out.print(socket.getPort());
+                    //serverSocket = new ServerSocket(4000);
+                    Socket socket = serverSocket.accept();
                     
-                
+                    DataInputStream entrada = new DataInputStream(socket.getInputStream());
+                    DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+                    String mensaje = "";
+                    char caracterIngreso = 0;
+                    while (caracterIngreso != 'a') {
 
-                    
-        
-        try {
-            
-             //System.out.print(socket.getPort());
-            
-            //serverSocket = new ServerSocket(4000);
-            Socket socket = serverSocket.accept();
-             System.out.print(socket.getPort());
-            System.out.println(socket.getSoTimeout());
-            DataInputStream entrada = new DataInputStream(socket.getInputStream());
-            DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
-            String mensaje = "";
-            char caracterIngreso = 0;
-            while (caracterIngreso != 'a') {
+                        mensaje = view.txtTramas.getText();
 
-                mensaje = view.jTextArea4.getText();
+                        String verificar = "";
 
-                String verificar = "";
+                        for (int i = 0; i < 27; i++) {
 
-                for (int i = 0; i < 27; i++) {
-                    
-                    
-                    caracterIngreso = entrada.readChar();
-                    if (caracterIngreso == 'a') {
-                        break;
+                            caracterIngreso = entrada.readChar();
+                            if (caracterIngreso == 'a') {
+                                break;
 
+                            }
+
+                            mensaje = mensaje + caracterIngreso;
+                            verificar = verificar + caracterIngreso;
+                            view.txtTramas.setText(mensaje);
+                        }
+
+                        if (caracterIngreso == 'a') {
+                            break;
+                        }
+
+                        String desentramado = convertir.desentramado(verificar);
+
+                        if (convertir.deteccion(desentramado) == 1) {
+                            salida.writeInt(1);
+                            mensajesCorrectos.add(desentramado);
+                            view.txtVR.append(desentramado + "   Correcto\n");
+                        } else {
+                            salida.writeInt(0);
+                            view.txtVR.append(desentramado + "   Incorrecto\n");
+                        }
+                        System.out.println(desentramado);
+                        view.txtTramas.setText(view.txtTramas.getText() + "\n");
                     }
-
-                    mensaje = mensaje + caracterIngreso;
-                    verificar = verificar + caracterIngreso;
-                    view.jTextArea4.setText(mensaje);
+                    try {
+                        entrada.close();
+                        salida.close();
+                        socket.close();
+                        //serverSocket.close();
+                    } catch (IOException ex) {
+                        Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                } catch (SocketException ex) {
+                    Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IOException ex) {
+                    Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                if (caracterIngreso == 'a') {
-                    break;
-                }
+                System.out.println("fin");
 
-                String desentramado = convertir.desentramado(verificar);
-
-                if (convertir.deteccion(desentramado) == 1) {
-                    salida.writeInt(1);
-                    mensajesCorrectos.add(desentramado);
-                    view.jTextArea5.append(desentramado + "   Correcto\n");
-                } else {
-                    salida.writeInt(0);
-                    view.jTextArea5.append(desentramado + "   Incorrecto\n");
-                }
-                System.out.println(desentramado);
-                view.jTextArea4.setText(view.jTextArea4.getText() + "\n");
+                mostrar();
             }
-try {
-            entrada.close();
-            salida.close();
-            socket.close();
-            //serverSocket.close();
-        } catch (IOException ex) {
-            Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        }catch (SocketException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }).start();
 
-        System.out.println("fin");
-        
-        
-        mostrar();
-                }
-            }).start();
-        
-
-        
     }
 
     private synchronized void mostrar() {
@@ -131,7 +119,7 @@ try {
             binarios.add(mensaje.substring(0, mensaje.length() - 3));
         }
         for (String mensaje : binarios) {
-            view.jTextArea6.append(convertir.ascii(mensaje));
+            view.txtRecibido.append(convertir.ascii(mensaje));
 
         }
     }
