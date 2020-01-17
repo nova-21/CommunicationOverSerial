@@ -96,25 +96,25 @@ public class EnviarHilo implements Runnable {
             BufferedReader br = new BufferedReader(
                 new InputStreamReader(p.getInputStream()));
             while ((s = br.readLine()) != null)
-                System.out.println("line: " + s);
+                //System.out.println("line: " + s);
             p.waitFor();
-            System.out.println ("exit: " + p.exitValue());
+            //System.out.println ("exit: " + p.exitValue());
             p.destroy();
         } catch (Exception e) {}
         
                 cadena="";
                 view.txtEnvio.append("Trama " + contadorTramas + " enviada.\n");
-                sleep(100);
+                //sleep(100);
 
                 
                 Process p2;
-                try {
-                        sleep(300);
+                /*try {
+                        //sleep(300);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    }*/
                 try {
-                    p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 1");
+                    p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 2.5");
             //p = Runtime.getRuntime().exec(b);
             BufferedReader br = new BufferedReader(
                 new InputStreamReader(p2.getInputStream()));

@@ -144,7 +144,7 @@ public class controlador implements ActionListener {
         }
 
         if (e.getSource().equals(view.btnLimpiar)) {
-            servidor();
+            //servidor();
         }
     }
 

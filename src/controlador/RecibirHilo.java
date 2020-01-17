@@ -90,7 +90,7 @@ public class RecibirHilo implements Runnable {
                     
                     String desentramado = convertir.desentramado(trama);
                     try {
-                        sleep(400);
+                        sleep(600);
                     } catch (InterruptedException ex) {
                         Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -125,7 +125,7 @@ public class RecibirHilo implements Runnable {
         String trama="";
         try {
             
-        Process p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 1");
+        Process p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 2");
             //p = Runtime.getRuntime().exec(b);
             BufferedReader br = new BufferedReader(
                 new InputStreamReader(p2.getInputStream()));
