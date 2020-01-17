@@ -64,11 +64,6 @@ public class RecibirHilo implements Runnable {
                     
                     trama=leer();
                     
-                    if(trama.length()!=27){
-                        responder("0");
-                        break;
-                    }
-                    
                     /*for (int i = 0; i < 27; i++) {
                         
                         

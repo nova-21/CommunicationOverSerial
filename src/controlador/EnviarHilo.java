@@ -43,7 +43,7 @@ public class EnviarHilo implements Runnable {
         //Socket socket = new Socket("192.168.1.12", 4000);
         //DataInputStream entrada = new DataInputStream(socket.getInputStream());
         //DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
-        String cadena = "";
+        String cadena="";
 
         try {
 
@@ -55,57 +55,58 @@ public class EnviarHilo implements Runnable {
                 if (randomNum == contadorTramas && error == 1 && perdida == 0) {
 
                     for (int car = 0; car < 13; car++) {
-                        cadena = cadena + (men.charAt(car));
-                        //sleep(100);
+                        cadena=cadena+(men.charAt(car));
+                        sleep(100);
                     }
                     if (men.charAt(13) == '0') {
-                        cadena = cadena + '1';
-                        //sleep(100);
+                        cadena=cadena+'1';
+                        sleep(100);
                     } else {
-                        cadena = cadena + '0';
-                        //sleep(100);
+                        cadena=cadena+'0';
+                        sleep(100);
                     }
 
                     for (int car = 14; car < men.length(); car++) {
-                        cadena = cadena + men.charAt(car);
-                        //sleep(100);
+                        cadena=cadena+men.charAt(car);
+                        sleep(100);
                     }
                     error = 0;
                 } else if (randomNum == contadorTramas && error == 0 && perdida == 1) {
                     perdida = 0;
                 } else {
                     for (Character car : men.toCharArray()) {
-                        cadena = cadena + car;
+                        cadena=cadena+car;
                         sleep(100);
                     }
                 }
-
+                
+                
                 String s;
-                Process p;
-                String a = "minimodem --rx  110 -A -c 3";
-                String comando = "echo " + cadena + "|minimodem --tx 110 -A";
-
-                String[] b = new String[]{"/bin/bash", "-c", comando};
-                //while(true){
-
-                try {
-                    p = Runtime.getRuntime().exec(b);
-                    //p = Runtime.getRuntime().exec(b);
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(p.getInputStream()));
-                    while ((s = br.readLine()) != null) //System.out.println("line: " + s);
-                    {
-                        p.waitFor();
-                    }
-                    //System.out.println ("exit: " + p.exitValue());
-                    p.destroy();
-                } catch (Exception e) {
-                }
-
-                cadena = "";
+        Process p;
+        String a="minimodem --rx  110 -A -c 3";
+        String comando="echo "+cadena+"|minimodem --tx 110 -A";
+        
+        String[] b=new String[] { "/bin/bash",  "-c", comando };
+        //while(true){
+            
+        
+        try {
+            p = Runtime.getRuntime().exec(b);
+            //p = Runtime.getRuntime().exec(b);
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream()));
+            while ((s = br.readLine()) != null)
+                //System.out.println("line: " + s);
+            p.waitFor();
+            //System.out.println ("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) {}
+        
+                cadena="";
                 view.txtEnvio.append("Trama " + contadorTramas + " enviada.\n");
                 //sleep(100);
 
+                
                 Process p2;
                 /*try {
                         //sleep(300);
@@ -114,29 +115,20 @@ public class EnviarHilo implements Runnable {
                     }*/
                 try {
                     p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 2.5");
-                    //p = Runtime.getRuntime().exec(b);
-                    BufferedReader br = new BufferedReader(
-                            new InputStreamReader(p2.getInputStream()));
-                    String in = br.readLine();
-                    if (in.length() != 1) {
-                        respuesta = -1;
-                    } else {
-                        respuesta = Integer.parseInt(in);
-                        //responder("0");
-                        break;
-                    }
-                    respuesta = Integer.parseInt(br.readLine());
-                    System.out.println("line: " + respuesta);
-                    //p2.waitFor();
-                    //System.out.println ("exit: " + p2.exitValue());
-                    System.out.println("antes de destruir");
-                    p2.destroy();
-
+            //p = Runtime.getRuntime().exec(b);
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p2.getInputStream()));
+            respuesta = Integer.parseInt(br.readLine());
+                System.out.println("line: " + respuesta);
+            //p2.waitFor();
+            //System.out.println ("exit: " + p2.exitValue());
+            System.out.println("antes de destruir");
+            p2.destroy();
                     //socket.setSoTimeout(5000);
                     //respuesta = entrada.readInt();
                     //socket.setSoTimeout(0);
                 } catch (SocketTimeoutException e) {
-
+                    
                     contadorTramas--;
 
                     view.txtEnvio.append("Sin respuesta, retransmitiendo...\n");
@@ -172,6 +164,7 @@ public class EnviarHilo implements Runnable {
             //entrada.close();
             //salida.close();
             //socket.close();
+
         } catch (SocketException ex) {
             JOptionPane.showMessageDialog(null, "No existe respuesta, conexión perdida.");
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
