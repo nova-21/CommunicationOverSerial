@@ -41,11 +41,11 @@ public class controlador implements ActionListener {
         this.view = view;
         this.view.btnEnviar.addActionListener(this);
         this.view.btnLimpiar.addActionListener(this);
-        try {
+        /*try {
             serverSocket = new ServerSocket(4000);
         } catch (IOException ex) {
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        }*/
         
         (new Thread(new Runnable(){
             //private ServerSocket serverSocket;

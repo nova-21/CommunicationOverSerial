@@ -6,9 +6,11 @@
 package controlador;
 
 //import static controlador.RecibirHilo.entrada;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import static java.lang.Thread.sleep;
 import java.net.Socket;
 import java.net.SocketException;
@@ -38,9 +40,10 @@ public class EnviarHilo implements Runnable {
         this.error = error;
         int controlTotal = 0;
 
-        Socket socket = new Socket("192.168.1.12", 4000);
-        DataInputStream entrada = new DataInputStream(socket.getInputStream());
-        DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+        //Socket socket = new Socket("192.168.1.12", 4000);
+        //DataInputStream entrada = new DataInputStream(socket.getInputStream());
+        //DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+        String cadena="";
 
         try {
 
@@ -52,19 +55,19 @@ public class EnviarHilo implements Runnable {
                 if (randomNum == contadorTramas && error == 1 && perdida == 0) {
 
                     for (int car = 0; car < 13; car++) {
-                        salida.writeChar(men.charAt(car));
+                        cadena=cadena+(men.charAt(car));
                         sleep(100);
                     }
                     if (men.charAt(13) == '0') {
-                        salida.writeChar('1');
+                        cadena=cadena+'1';
                         sleep(100);
                     } else {
-                        salida.writeChar('0');
+                        cadena=cadena+'0';
                         sleep(100);
                     }
 
                     for (int car = 14; car < men.length(); car++) {
-                        salida.writeChar(men.charAt(car));
+                        cadena=cadena+men.charAt(car);
                         sleep(100);
                     }
                     error = 0;
@@ -72,35 +75,79 @@ public class EnviarHilo implements Runnable {
                     perdida = 0;
                 } else {
                     for (Character car : men.toCharArray()) {
-                        salida.writeChar(car);
+                        cadena=cadena+car;
                         sleep(100);
                     }
                 }
+                
+                
+                String s;
+        Process p;
+        String a="minimodem --rx  110 -A -c 3";
+        String comando="echo "+cadena+"|minimodem --tx 110 -A";
+        
+        String[] b=new String[] { "/bin/bash",  "-c", comando };
+        //while(true){
+            
+        
+        try {
+            p = Runtime.getRuntime().exec(b);
+            //p = Runtime.getRuntime().exec(b);
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream()));
+            while ((s = br.readLine()) != null)
+                System.out.println("line: " + s);
+            p.waitFor();
+            System.out.println ("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) {}
+        
+                cadena="";
                 view.txtEnvio.append("Trama " + contadorTramas + " enviada.\n");
                 sleep(100);
 
+                
+                Process p2;
                 try {
-                    socket.setSoTimeout(5000);
-                    respuesta = entrada.readInt();
-                    socket.setSoTimeout(0);
+                        sleep(300);
+                    } catch (InterruptedException ex) {
+                        Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                try {
+                    p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 1");
+            //p = Runtime.getRuntime().exec(b);
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p2.getInputStream()));
+            respuesta = Integer.parseInt(br.readLine());
+                System.out.println("line: " + respuesta);
+            //p2.waitFor();
+            //System.out.println ("exit: " + p2.exitValue());
+            System.out.println("antes de destruir");
+            p2.destroy();
+                    //socket.setSoTimeout(5000);
+                    //respuesta = entrada.readInt();
+                    //socket.setSoTimeout(0);
                 } catch (SocketTimeoutException e) {
-                    socket.setSoTimeout(0);
-                    //controlTotal++;
+                    
                     contadorTramas--;
 
                     view.txtEnvio.append("Sin respuesta, retransmitiendo...\n");
                     continue;
                 }
 
-                if (respuesta == 0) {
-                    //controlTotal++;
-                    contadorTramas--;
-                    view.txtEnvio.append("Trama enviada contiene error, retransmitiendo...\n");
-
-                } else if (respuesta == 1) {
-                    //controlTotal = 0;
-                    view.txtEnvio.append("Trama " + contadorTramas + " confirmada.\n");
-
+                switch (respuesta) {
+                    case 0:
+                        //controlTotal++;
+                        contadorTramas--;
+                        view.txtEnvio.append("Trama enviada contiene error, retransmitiendo...\n");
+                        break;
+                    case 1:
+                        //controlTotal = 0;
+                        view.txtEnvio.append("Trama " + contadorTramas + " confirmada.\n");
+                        break;
+                    default:
+                        contadorTramas--;
+                        break;
                 }
 
                 /*if (controlTotal == 5) {
@@ -111,23 +158,19 @@ public class EnviarHilo implements Runnable {
 
             }
 
-            salida.writeChar('a');
+            //salida.writeChar('a');
             JOptionPane.showMessageDialog(null, "Mensaje enviado con exito.");
 
-            entrada.close();
-            salida.close();
-            socket.close();
+            //entrada.close();
+            //salida.close();
+            //socket.close();
 
         } catch (SocketException ex) {
             JOptionPane.showMessageDialog(null, "No existe respuesta, conexión perdida.");
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-            try {
-                entrada.close();
-                salida.close();
-                socket.close();
-            } catch (IOException ex1) {
-                Logger.getLogger(EnviarHilo.class.getName()).log(Level.SEVERE, null, ex1);
-            }
+            //entrada.close();
+            //salida.close();
+            //socket.close();
         } catch (IOException ex) {
 
             Logger.getLogger(EnviarHilo.class.getName()).log(Level.SEVERE, null, ex);

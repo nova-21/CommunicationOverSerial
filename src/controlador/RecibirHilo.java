@@ -6,9 +6,12 @@
 package controlador;
 
 //import static controlador.EnviarHilo.socket;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import static java.lang.Thread.sleep;
 //import static java.lang.Thread.sleep;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -44,65 +47,70 @@ public class RecibirHilo implements Runnable {
             @Override
             public void run() {
 
-                try {
-
-                    //System.out.print(socket.getPort());
-                    //serverSocket = new ServerSocket(4000);
-                    Socket socket = serverSocket.accept();
+                //System.out.print(socket.getPort());
+                //serverSocket = new ServerSocket(4000);
+                //Socket socket = serverSocket.accept();
+                
+                //DataInputStream entrada = new DataInputStream(socket.getInputStream());
+                //DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
+                String mensaje = "";
+                String trama="";
+                char caracterIngreso = 0;
+                while (caracterIngreso != 'a') {
                     
-                    DataInputStream entrada = new DataInputStream(socket.getInputStream());
-                    DataOutputStream salida = new DataOutputStream(socket.getOutputStream());
-                    String mensaje = "";
-                    char caracterIngreso = 0;
-                    while (caracterIngreso != 'a') {
-
-                        mensaje = view.txtTramas.getText();
-
-                        String verificar = "";
-
-                        for (int i = 0; i < 27; i++) {
-
-                            caracterIngreso = entrada.readChar();
-                            if (caracterIngreso == 'a') {
-                                break;
-
-                            }
-
-                            mensaje = mensaje + caracterIngreso;
-                            verificar = verificar + caracterIngreso;
-                            view.txtTramas.setText(mensaje);
-                        }
-
+                    mensaje = view.txtTramas.getText();
+                    
+                    //String verificar = "";
+                    
+                    trama=leer();
+                    
+                    /*for (int i = 0; i < 27; i++) {
+                        
+                        
+                        
+                        
+                        caracterIngreso = leer().charAt(0);
                         if (caracterIngreso == 'a') {
                             break;
+                            
                         }
-
-                        String desentramado = convertir.desentramado(verificar);
-
-                        if (convertir.deteccion(desentramado) == 1) {
-                            salida.writeInt(1);
-                            mensajesCorrectos.add(desentramado);
-                            view.txtVR.append(desentramado + "   Correcto\n");
-                        } else {
-                            salida.writeInt(0);
-                            view.txtVR.append(desentramado + "   Incorrecto\n");
-                        }
-                        System.out.println(desentramado);
-                        view.txtTramas.setText(view.txtTramas.getText() + "\n");
+                        
+                        mensaje = mensaje + caracterIngreso;
+                        verificar = verificar + caracterIngreso;
+                        view.txtTramas.setText(mensaje);
+                    }*/
+                    
+                        mensaje = mensaje + trama;
+                        //verificar = verificar + caracterIngreso;
+                        view.txtTramas.setText(mensaje);
+                    
+                    if (caracterIngreso == 'a') {
+                        break;
                     }
+                    
+                    String desentramado = convertir.desentramado(trama);
                     try {
-                        entrada.close();
-                        salida.close();
-                        socket.close();
-                        //serverSocket.close();
-                    } catch (IOException ex) {
+                        sleep(400);
+                    } catch (InterruptedException ex) {
                         Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                } catch (SocketException ex) {
-                    Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
-                    Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+                    
+                    if (convertir.deteccion(desentramado) == 1) {
+                        responder("1");
+                        mensajesCorrectos.add(desentramado);
+                        view.txtVR.append(desentramado + "   Correcto\n");
+                    } else {
+                        responder("0");
+                        view.txtVR.append(desentramado + "   Incorrecto\n");
+                    }
+                    
+                    System.out.println(desentramado);
+                    view.txtTramas.setText(view.txtTramas.getText() + "\n");
                 }
+                //entrada.close();
+                //salida.close();
+                //socket.close();
+                //serverSocket.close();
 
                 System.out.println("fin");
 
@@ -110,6 +118,50 @@ public class RecibirHilo implements Runnable {
             }
         }).start();
 
+    }
+    
+    
+    private String leer(){
+        String trama="";
+        try {
+            
+        Process p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 1");
+            //p = Runtime.getRuntime().exec(b);
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p2.getInputStream()));
+            trama = br.readLine();
+            System.out.println("line: " + trama);
+            //p2.waitFor();
+            //System.out.println ("exit: " + p2.exitValue());
+            System.out.println("antes de destruir");
+            p2.destroy();
+        } catch (IOException ex) {
+            Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                
+        return trama;
+        
+        
+    }
+    
+    private void responder(String trama){
+        
+        String comando="echo "+trama+"|minimodem --tx 110 -A";
+        
+        String[] b=new String[] { "/bin/bash",  "-c", comando };
+        
+        Process p;
+        
+        try {
+            p = Runtime.getRuntime().exec(b);
+            //p = Runtime.getRuntime().exec(b);
+            BufferedReader br = new BufferedReader(
+                new InputStreamReader(p.getInputStream()));
+            p.waitFor();
+            //System.out.println ("exit: " + p.exitValue());
+            p.destroy();
+        } catch (Exception e) {}
+        
     }
 
     private synchronized void mostrar() {
