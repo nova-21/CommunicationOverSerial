@@ -28,8 +28,6 @@ public class controlador implements ActionListener {
     private Vista view;
     private int error = 0;
     private int perdida = 0;
-    private ServerSocket serverSocket;
-    private Socket socket;
     private Conversor convertir = new Conversor();
     private ArrayList<String> textoBinario = new ArrayList<String>();
     private ArrayList<String> textoRedundancia = new ArrayList<String>();
@@ -41,14 +39,9 @@ public class controlador implements ActionListener {
         this.view = view;
         this.view.btnEnviar.addActionListener(this);
         this.view.btnLimpiar.addActionListener(this);
-        /*try {
-            serverSocket = new ServerSocket(4000);
-        } catch (IOException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }*/
-        
+       
         (new Thread(new Runnable(){
-            //private ServerSocket serverSocket;
+            
                 @Override
                 public void run(){
         servidor();
@@ -65,11 +58,7 @@ public class controlador implements ActionListener {
 
     private synchronized void convertirBinario() {
         textoBinario = convertir.binary(this.view.txtAreaMensajeSalida.getText());
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     private synchronized void agregarRedundancia() {
@@ -77,11 +66,7 @@ public class controlador implements ActionListener {
         for (Object men : textoRedundancia) {
             this.view.txtAreaRedundancia.append((String) men + "\n");
         }
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     private synchronized void entramar() {
@@ -89,11 +74,7 @@ public class controlador implements ActionListener {
         for (Object men : textoEntramado) {
             this.view.txtAreaEntramado.append((String) men + "\n");
         }
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     private synchronized void transporte() {
@@ -115,7 +96,7 @@ public class controlador implements ActionListener {
         RecibirHilo recibir = new RecibirHilo();
         Thread hilo = new Thread(recibir);
         hilo.start();
-        recibir.servidor(this.view, serverSocket);
+        recibir.servidor(this.view);
     }
 
     @Override
