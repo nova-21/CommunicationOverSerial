@@ -6,20 +6,18 @@
 package controlador;
 
 //import static controlador.RecibirHilo.entrada;
-import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import static java.lang.Thread.sleep;
+import java.net.Socket;
+import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.ThreadLocalRandom;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.logging.Level;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import vistas.Vista;
@@ -103,13 +101,12 @@ public class EnviarHilo implements Runnable {
                     //controlTotal = 0;
                     view.txtEnvio.append("Trama " + contadorTramas + " confirmada.\n");
 
-                        view.txtEnvio.append("Trama " + contadorTramas + " confirmada.\n");
-                        break;
-                    default:
-                        contadorTramas--;
-                        break;
                 }
 
+                /*if (controlTotal == 5) {
+                    respuesta = -1;
+                    break;
+                }*/
                 respuesta = -1;
 
             }
