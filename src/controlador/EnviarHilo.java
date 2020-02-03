@@ -53,6 +53,7 @@ public class EnviarHilo implements Runnable {
                 view.txtEnvio.append("Enviando trama " + contadorTramas + ".\n");
 
                 String men = textoEntramado.get(contadorTramas);
+                
                 if (randomNum == contadorTramas && error == 1 && perdida == 0) {
 
                     for (int car = 0; car < 13; car++) {
@@ -81,14 +82,17 @@ public class EnviarHilo implements Runnable {
                 } else {
                     for (Character car : men.toCharArray()) {
                         salida.write(car);
+                        
                         sleep(delay);
                     }
+                    
                 }
                 
                 sleep(delay);
 
-                  
+                 
                 respuesta = entrada.read();
+                
                 
                 view.txtEnvio.append("Trama " + contadorTramas + " enviada.\n");
 
@@ -110,8 +114,9 @@ public class EnviarHilo implements Runnable {
                 respuesta = -1;
 
             }
-
+            sleep(500);
             salida.write('a');
+            
             JOptionPane.showMessageDialog(null, "Mensaje enviado con exito.");
 
             entrada.close();
@@ -134,20 +139,7 @@ public class EnviarHilo implements Runnable {
 
     }
 
-    private void respuesta(){
-        long endTimeMillis = System.currentTimeMillis() + 10000;
-    while (true) {
-            
-        if (System.currentTimeMillis() > endTimeMillis || respuesta!=-1) {
-            try {
-                respuesta=entrada.read();
-            } catch (IOException ex) {
-                Logger.getLogger(EnviarHilo.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return;
-        }
-    }
-    }
+    
     
     @Override
     public void run() {

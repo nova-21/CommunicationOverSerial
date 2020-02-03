@@ -123,8 +123,6 @@ public class Vista extends javax.swing.JFrame {
 
         jLabel8.setText("Mensaje recibido");
 
-        sliderVelocidad.setMinimum(5);
-
         jLabel9.setText("Velocidad:");
 
         ckCRC.setSelected(true);

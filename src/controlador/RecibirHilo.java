@@ -37,7 +37,9 @@ public class RecibirHilo implements Runnable {
     private Vista view;
     InputStream leer;
     OutputStream salida;
-   
+    String filePathOut = "/Users/David/Desktop/2.txt";
+    int TAMANO=45;
+    
 
     public void servidor(Vista view, InputStream entrada, OutputStream salida) {
         this.view = view;
@@ -51,9 +53,10 @@ public class RecibirHilo implements Runnable {
             //private ServerSocket serverSocket;
             @Override
             public void run() {
+                
 
                 try {
-
+                    
                     String mensaje = "";
                     char caracterIngreso = 0;
                     while (caracterIngreso != 'a') {
@@ -62,10 +65,11 @@ public class RecibirHilo implements Runnable {
 
                         String verificar = "";
 
-                        for (int i = 0; i < 27; i++) {
+                        for (int i = 0; i < TAMANO; i++) {
 
                             caracterIngreso = (char) leer.read();
                             if (caracterIngreso == 'a') {
+                                System.out.println("break");
                                 break;
 
                             }
@@ -77,13 +81,18 @@ public class RecibirHilo implements Runnable {
                         }
 
                         if (caracterIngreso == 'a') {
+                            System.out.println("fin");
+                            
                             break;
+                            
                         }
 
                         String desentramado = convertir.desentramado(verificar);
+                        
+                        
 
                         if (verificar.charAt(0) == '1' && verificar.charAt(1) == ' ') {
-                           // System.out.println("ack"); No detecta
+                            // System.out.println("ack"); No detecta
                         } else {
                             if (convertir.deteccion(desentramado) == 1) {
                                 try {
@@ -102,21 +111,21 @@ public class RecibirHilo implements Runnable {
 //                                }
                                 if (view.ckHamm.isSelected()) {
                                     try {
-                                    sleep(500);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                                        sleep(500);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                     salida.write('1');
-                                    String corregido=hamming(desentramado);
+                                    String corregido = hamming(desentramado);
                                     mensajesCorrectos.add(corregido);
-                                    
-                                    view.txtVR.append(desentramado + "   Incorrecto    "+corregido+"   Corregido \n");
+
+                                    view.txtVR.append(desentramado + "   Incorrecto    " + corregido + "   Corregido \n");
                                 } else {
                                     try {
-                                    sleep(500);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
-                                }
+                                        sleep(500);
+                                    } catch (InterruptedException ex) {
+                                        Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
                                     salida.write('0');
                                     view.txtVR.append(desentramado + "   Incorrecto\n");
                                 }
@@ -133,7 +142,7 @@ public class RecibirHilo implements Runnable {
                 } catch (IOException ex) {
                     Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
+                System.out.println(mensajesCorrectos.size());
                 System.out.println("fin");
 
                 mostrar();
@@ -152,26 +161,44 @@ public class RecibirHilo implements Runnable {
             view.txtRecibido.append(convertir.ascii(mensaje));
 
         }
+        
+        System.out.println(binarios.size());
+
+        if (view.ckImagen.isSelected()) {
+            //byte[] bFile=mensajesCorrectos.toArray();
+            byte[] bFile= new byte[binarios.size()];
+            int contador=0;
+            for (String o : binarios) {
+                int bits = (int) Long.parseLong(o, 2);
+                //System.out.println(bits);
+                bFile[contador]=Byte.parseByte(""+bits,10) ;
+                contador++;
+            }
+
+            ArrayBytesFile fileOutput = new ArrayBytesFile(filePathOut, bFile);
+            System.out.println("File: " + filePathOut);
+            fileOutput.writeFile();
+        }
     }
 
     private String hamming(String trama) {
-        String corregida="";
+        String corregida = "";
         for (int car = 0; car < 5; car++) {
-           corregida=corregida+trama.charAt(car);
+            corregida = corregida + trama.charAt(car);
 
         }
-        
+
         if (trama.charAt(5) == '0') {
-            corregida=corregida+'1';
-            
+            corregida = corregida + '1';
+
         } else {
-            corregida=corregida+'0';
-            
+            corregida = corregida + '0';
+
         }
 
         for (int car = 6; car < trama.length(); car++) {
-            corregida=corregida+trama.charAt(car);
-            
+            corregida = corregida + trama.charAt(car);
+
         }
         return corregida;
     }

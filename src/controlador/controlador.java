@@ -73,38 +73,46 @@ public class controlador implements ActionListener {
     }
 
     private synchronized void enviar() {
-        if(view.ckImagen.isSelected()){
-           convertirBinarioArchivo();
-        }else{
-           convertirBinario(); 
+        if (view.ckImagen.isSelected()) {
+            convertirBinarioArchivo();
+        } else {
+            convertirBinario();
         }
-        
+
         agregarRedundancia();
         entramar();
         transporte();
     }
-    
-    private synchronized void convertirBinarioArchivo(){
-        //File fileInput = new File (path);
 
-        //String filePathOut = "/Users/David/Desktop/Test_out.png";
-
-        //ArrayBytesFile file = new ArrayBytesFile(fileInput);
-       // byte[] bFile = file.getBFile();
-        ArrayList<String> tramas= new ArrayList();
-        String trama="";
+    private synchronized void convertirBinarioArchivo() {
+        ArrayList by= new ArrayList();
         try {
-                      byte[] fileContent = Files.readAllBytes(Paths.get(this.path));
-            for(byte o:fileContent){
-                textoBinario.add(Integer.toBinaryString((o & 0xFF) + 0x100).substring(1));
+            byte[] fileContent = Files.readAllBytes(Paths.get(this.path));
+            for (byte o : fileContent) {
+                
+                by.add(""+o);
+                //System.out.println(o);
+            }
+        } catch (IOException ex) {
 
         }
-        } catch (IOException ex) {
-           
+        
+        for(Object text:by){
+            String cosa=Integer.toBinaryString(Integer.parseInt((String) text));
+            int ajuste=32-cosa.length();
+            String ajus="";
+            for(int contAjuste=0;contAjuste<ajuste;contAjuste++){
+                ajus=ajus+"0";
+            }
+            ajus=ajus+cosa;
+            textoBinario.add(ajus);
+            //System.out.println(ajus);
         }
+
+        
     }
 
-    void connect() throws Exception {
+    public synchronized void connect() throws Exception {
         CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier("COM4");
         if (portIdentifier.isCurrentlyOwned()) {
             System.out.println("Error: Port is currently in use");
@@ -113,7 +121,7 @@ public class controlador implements ActionListener {
 
             if (commPort instanceof SerialPort) {
                 SerialPort serialPort = (SerialPort) commPort;
-                serialPort.setSerialPortParams(57600, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+                serialPort.setSerialPortParams(1500, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
 
                 entrada = serialPort.getInputStream();
                 salida = serialPort.getOutputStream();
@@ -182,7 +190,7 @@ public class controlador implements ActionListener {
     @Override
     public synchronized void actionPerformed(ActionEvent e) {
         if (e.getSource().equals(view.btnEnviar)) {
-            
+
             if (this.view.ckError.isSelected()) {
                 error = 1;
 

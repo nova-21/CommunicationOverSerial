@@ -120,13 +120,14 @@ public class Conversor {
         for (Object men : mensajes) {
             System.out.println(men);
         }*/
+        
         return mensajes;
     }
 
     public int deteccion(String men) {
 
         int resultado;
-
+        //System.out.println("verga");
         String dividend = men;
         String remainder = div(dividend, divisor);
         //System.out.println(remainder);
@@ -138,13 +139,14 @@ public class Conversor {
 
         //System.out.println("Remainder is: " + remainder);
         //contador++;
+        
         return resultado;
 
     }
 
     public ArrayList<String> entramado(ArrayList<String> mensajes) {
         tramas = new ArrayList();
-        String code = "01111110";
+        String code = "01110";
         String trama = "";
         for (int i = 0; i < mensajes.size(); i++) {
             trama = "";
@@ -159,7 +161,7 @@ public class Conversor {
     }
 
     public String desentramado(String trama) {
-        return trama.substring(8, trama.length() - 8);
+        return trama.substring(5, trama.length() - 5);
     }
     
     
@@ -197,9 +199,9 @@ return s2;
             binary.append(' ');
         }
 
-        System.out.println(binary);
+        //System.out.println(binary);
 
-        System.out.println(fileData[0]);
+        //System.out.println(fileData[0]);
     }
 
     public void archivoRecibir(byte[] fileData) throws FileNotFoundException, IOException {
