@@ -126,11 +126,7 @@ public class controlador implements ActionListener {
 
     private synchronized void convertirBinario() {
         textoBinario = convertir.binary(this.view.txtAreaMensajeSalida.getText());
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     private synchronized void agregarRedundancia() {
@@ -138,11 +134,7 @@ public class controlador implements ActionListener {
         for (Object men : textoRedundancia) {
             this.view.txtAreaRedundancia.append((String) men + "\n");
         }
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     private synchronized void entramar() {
@@ -150,11 +142,7 @@ public class controlador implements ActionListener {
         for (Object men : textoEntramado) {
             this.view.txtAreaEntramado.append((String) men + "\n");
         }
-        try {
-            sleep(1000);
-        } catch (InterruptedException ex) {
-            Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
     }
 
     private synchronized void transporte() {
@@ -227,7 +215,7 @@ public class controlador implements ActionListener {
         }
 
         if (e.getSource().equals(view.btnLimpiar)) {
-            servidor();
+            //servidor();
         }
     }
 

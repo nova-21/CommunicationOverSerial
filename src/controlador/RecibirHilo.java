@@ -6,6 +6,7 @@
 package controlador;
 
 //import static controlador.EnviarHilo.socket;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,6 +17,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -29,9 +31,7 @@ import vistas.Vista;
 public class RecibirHilo implements Runnable {
 
     private ServerSocket serverSocket;
-    //private Socket socket;
-    //private  DataInputStream entrada;
-    //private DataOutputStream salida;
+    
     private Conversor convertir = new Conversor();
     private ArrayList<String> mensajesCorrectos = new ArrayList<String>();
     private Vista view;
@@ -48,7 +48,7 @@ public class RecibirHilo implements Runnable {
         //this.socket=socket;
 
         new Thread(new Runnable() {
-            //private ServerSocket serverSocket;
+
             @Override
             public void run() {
 
@@ -68,7 +68,7 @@ public class RecibirHilo implements Runnable {
                             if (caracterIngreso == 'a') {
                                 break;
 
-                            }
+                    mensaje = view.txtTramas.getText();
 
                             mensaje = mensaje + caracterIngreso;
                             verificar = verificar + caracterIngreso;
@@ -76,11 +76,9 @@ public class RecibirHilo implements Runnable {
                             view.txtTramas.setText(mensaje);
                         }
 
-                        if (caracterIngreso == 'a') {
-                            break;
-                        }
+                    mensaje = mensaje + trama;
 
-                        String desentramado = convertir.desentramado(verificar);
+                    view.txtTramas.setText(mensaje);
 
                         if (verificar.charAt(0) == '1' && verificar.charAt(1) == ' ') {
                            // System.out.println("ack"); No detecta
@@ -139,6 +137,47 @@ public class RecibirHilo implements Runnable {
                 mostrar();
             }
         }).start();
+
+    }
+
+    private String leer() {
+        String trama = "";
+        try {
+
+            Process p2 = Runtime.getRuntime().exec("minimodem --rx-one  110 -A -c 2");
+            try {
+                p2.waitFor();
+            } catch (InterruptedException ex) {
+                Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(p2.getInputStream()));
+            
+            trama = br.readLine();
+            
+            p2.destroy();
+        } catch (IOException ex) {
+            Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return trama;
+
+    }
+
+    private void responder(String trama) {
+
+        String comando = "echo " + trama + "|minimodem --tx 110 -A";
+
+        String[] b = new String[]{"/bin/bash", "-c", comando};
+
+        Process p;
+
+        try {
+            p = Runtime.getRuntime().exec(b);
+            p.waitFor();
+            p.destroy();
+        } catch (Exception e) {
+        }
 
     }
 
