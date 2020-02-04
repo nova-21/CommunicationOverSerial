@@ -38,7 +38,8 @@ public class RecibirHilo implements Runnable {
     InputStream leer;
     OutputStream salida;
     String filePathOut = "/Users/David/Desktop/2.txt";
-    int TAMANO=45;
+    //int TAMANO=45;
+    int TAMANO=21;
     
 
     public void servidor(Vista view, InputStream entrada, OutputStream salida) {
@@ -111,7 +112,7 @@ public class RecibirHilo implements Runnable {
 //                                }
                                 if (view.ckHamm.isSelected()) {
                                     try {
-                                        sleep(500);
+                                        sleep(700);
                                     } catch (InterruptedException ex) {
                                         Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
                                     }
@@ -183,12 +184,12 @@ public class RecibirHilo implements Runnable {
 
     private String hamming(String trama) {
         String corregida = "";
-        for (int car = 0; car < 5; car++) {
+        for (int car = 0; car < Variables.POSICION_ERROR_DESENTRAMADO; car++) {
             corregida = corregida + trama.charAt(car);
 
         }
 
-        if (trama.charAt(5) == '0') {
+        if (trama.charAt(Variables.POSICION_ERROR_DESENTRAMADO) == '0') {
             corregida = corregida + '1';
 
         } else {
@@ -196,7 +197,7 @@ public class RecibirHilo implements Runnable {
 
         }
 
-        for (int car = 6; car < trama.length(); car++) {
+        for (int car = Variables.POSICION_ERROR_DESENTRAMADO + 1; car < trama.length(); car++) {
             corregida = corregida + trama.charAt(car);
 
         }

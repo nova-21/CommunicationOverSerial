@@ -56,11 +56,11 @@ public class EnviarHilo implements Runnable {
                 
                 if (randomNum == contadorTramas && error == 1 && perdida == 0) {
 
-                    for (int car = 0; car < 13; car++) {
+                    for (int car = 0; car < Variables.POSICION_ERROR_ENTRAMADO; car++) {
                         salida.write(men.charAt(car));
                         sleep(delay);
                     }
-                    if (men.charAt(13) == '0') {
+                    if (men.charAt(Variables.POSICION_ERROR_ENTRAMADO) == '0') {
                         salida.write('1');
                         sleep(delay);
                     } else {
@@ -68,7 +68,7 @@ public class EnviarHilo implements Runnable {
                         sleep(delay);
                     }
 
-                    for (int car = 14; car < men.length(); car++) {
+                    for (int car = Variables.POSICION_ERROR_ENTRAMADO + 1; car < men.length(); car++) {
                         salida.write(men.charAt(car));
                         sleep(delay);
                     }
