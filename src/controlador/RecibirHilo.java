@@ -28,7 +28,7 @@ import vistas.Vista;
  */
 public class RecibirHilo implements Runnable {
 
-    private ServerSocket serverSocket;
+    //private ServerSocket serverSocket;
     //private Socket socket;
     //private  DataInputStream entrada;
     //private DataOutputStream salida;
@@ -54,7 +54,7 @@ public class RecibirHilo implements Runnable {
             this.TAMANO=21;
         }
         
-        this.filePathOut=view.txtSalida.getText();
+        this.filePathOut= Variables.CARPETA_RECIBIDOS + "\\" +view.txtSalida.getText();
        
         
         //this.socket=socket;
@@ -186,8 +186,9 @@ public class RecibirHilo implements Runnable {
             }
 
             ArrayBytesFile fileOutput = new ArrayBytesFile(filePathOut, bFile);
-            System.out.println("File: " + filePathOut);
+            System.out.println("File: " + filePathOut);            
             fileOutput.writeFile();
+            FileManager.getObject().cargarArchivosRecibidos();
         }
     }
 

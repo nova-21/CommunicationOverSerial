@@ -10,15 +10,11 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import static java.lang.Thread.sleep;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -39,6 +35,8 @@ public class controlador implements ActionListener {
     private int error = 0;
     private int perdida = 0;
     private int DELAY = 1;
+    
+    private FileManager fileManager;
 
     private Conversor convertir = new Conversor();
     private ArrayList<String> textoBinario = new ArrayList<String>();
@@ -51,6 +49,8 @@ public class controlador implements ActionListener {
     public controlador(Vista view) {
 
         this.view = view;
+        this.fileManager = FileManager.getObject(view);
+        this.fileManager.cargarArchivosRecibidos();
         this.view.btnEnviar.addActionListener(this);
         this.view.btnLimpiar.addActionListener(this);
         this.view.ckCRC.addActionListener(this);
@@ -58,13 +58,12 @@ public class controlador implements ActionListener {
         this.view.btnArchivo.addActionListener(this);
         this.view.btnRecibir.addActionListener(this);
         this.view.ckArchivo.addActionListener(this);
+        this.view.btnAbrirArchivo.addActionListener(this);
         try {
             connect();
         } catch (Exception ex) {
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        
 
     }
 
@@ -81,35 +80,34 @@ public class controlador implements ActionListener {
     }
 
     private synchronized void convertirBinarioArchivo() {
-        ArrayList by= new ArrayList();
+        ArrayList by = new ArrayList();
         try {
             byte[] fileContent = Files.readAllBytes(Paths.get(this.path));
             for (byte o : fileContent) {
-                
-                by.add(""+o);
+
+                by.add("" + o);
                 //System.out.println(o);
             }
         } catch (IOException ex) {
 
         }
-        
-        for(Object text:by){
-            String cosa=Integer.toBinaryString(Integer.parseInt((String) text));
-            int ajuste=32-cosa.length();
-            String ajus="";
-            for(int contAjuste=0;contAjuste<ajuste;contAjuste++){
-                ajus=ajus+"0";
+
+        for (Object text : by) {
+            String cosa = Integer.toBinaryString(Integer.parseInt((String) text));
+            int ajuste = 32 - cosa.length();
+            String ajus = "";
+            for (int contAjuste = 0; contAjuste < ajuste; contAjuste++) {
+                ajus = ajus + "0";
             }
-            ajus=ajus+cosa;
+            ajus = ajus + cosa;
             textoBinario.add(ajus);
             //System.out.println(ajus);
         }
 
-        
     }
 
     public synchronized void connect() throws Exception {
-        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier("COM11");
+        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier("COM3");
         if (portIdentifier.isCurrentlyOwned()) {
             System.out.println("Error: Port is currently in use");
         } else {
@@ -232,30 +230,36 @@ public class controlador implements ActionListener {
 
         if (e.getSource().equals(view.btnLimpiar)) {
             servidor();
+            view.jListArchivosRecibidos.clearSelection();
         }
-        
-        if(e.getSource().equals(view.ckArchivo)){
-            if(view.ckArchivo.isSelected()){
+
+        if (e.getSource().equals(view.ckArchivo)) {
+            if (view.ckArchivo.isSelected()) {
                 view.txtArchivo.setEnabled(true);
-            view.txtSalida.setEnabled(true);
-            view.btnArchivo.setEnabled(true);
-            }else{
+                view.txtSalida.setEnabled(true);
+                view.btnArchivo.setEnabled(true);
+            } else {
                 view.txtArchivo.setEnabled(false);
-            view.txtSalida.setEnabled(false);
-            view.btnArchivo.setEnabled(false);
+                view.txtSalida.setEnabled(false);
+                view.btnArchivo.setEnabled(false);
             }
-            
+
+        }
+
+        if (e.getSource().equals((view.btnRecibir))) {
+            (new Thread(new Runnable() {
+                //private ServerSocket serverSocket;
+                @Override
+                public void run() {
+                    servidor();
+                }
+            })).start();
         }
         
-        if(e.getSource().equals((view.btnRecibir))){
-            (new Thread(new Runnable() {
-            //private ServerSocket serverSocket;
-            @Override
-            public void run() {
-                servidor();
-            }
-        })).start();
+        if(e.getSource().equals(view.btnAbrirArchivo)) {
+            fileManager.abrirArchivo();
         }
-    }
+    }    
+    
 
 }

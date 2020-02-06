@@ -12,4 +12,5 @@ package controlador;
 public class Variables {
     public static final int POSICION_ERROR_ENTRAMADO = 13;
     public static final int POSICION_ERROR_DESENTRAMADO = 9;
+    public static final String CARPETA_RECIBIDOS = "archivos_recibidos";
 }
