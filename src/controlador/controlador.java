@@ -56,24 +56,20 @@ public class controlador implements ActionListener {
         this.view.ckCRC.addActionListener(this);
         this.view.ckHamm.addActionListener(this);
         this.view.btnArchivo.addActionListener(this);
+        this.view.btnRecibir.addActionListener(this);
+        this.view.ckArchivo.addActionListener(this);
         try {
             connect();
         } catch (Exception ex) {
             Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        (new Thread(new Runnable() {
-            //private ServerSocket serverSocket;
-            @Override
-            public void run() {
-                servidor();
-            }
-        })).start();
+        
 
     }
 
     private synchronized void enviar() {
-        if (view.ckImagen.isSelected()) {
+        if (view.ckArchivo.isSelected()) {
             convertirBinarioArchivo();
         } else {
             convertirBinario();
@@ -113,7 +109,7 @@ public class controlador implements ActionListener {
     }
 
     public synchronized void connect() throws Exception {
-        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier("COM4");
+        CommPortIdentifier portIdentifier = CommPortIdentifier.getPortIdentifier("COM11");
         if (portIdentifier.isCurrentlyOwned()) {
             System.out.println("Error: Port is currently in use");
         } else {
@@ -236,6 +232,29 @@ public class controlador implements ActionListener {
 
         if (e.getSource().equals(view.btnLimpiar)) {
             servidor();
+        }
+        
+        if(e.getSource().equals(view.ckArchivo)){
+            if(view.ckArchivo.isSelected()){
+                view.txtArchivo.setEnabled(true);
+            view.txtSalida.setEnabled(true);
+            view.btnArchivo.setEnabled(true);
+            }else{
+                view.txtArchivo.setEnabled(false);
+            view.txtSalida.setEnabled(false);
+            view.btnArchivo.setEnabled(false);
+            }
+            
+        }
+        
+        if(e.getSource().equals((view.btnRecibir))){
+            (new Thread(new Runnable() {
+            //private ServerSocket serverSocket;
+            @Override
+            public void run() {
+                servidor();
+            }
+        })).start();
         }
     }
 

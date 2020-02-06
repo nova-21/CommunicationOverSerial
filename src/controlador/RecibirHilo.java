@@ -37,7 +37,7 @@ public class RecibirHilo implements Runnable {
     private Vista view;
     InputStream leer;
     OutputStream salida;
-    String filePathOut = "/Users/David/Desktop/2.txt";
+    String filePathOut = "2.txt";
     //int TAMANO=45;
     int TAMANO=21;
     
@@ -48,6 +48,15 @@ public class RecibirHilo implements Runnable {
         this.salida = salida;
         
         byte[] buffer = new byte[1024];
+        if(view.ckArchivo.isSelected()){
+            this.TAMANO=45;
+        }else{
+            this.TAMANO=21;
+        }
+        
+        this.filePathOut=view.txtSalida.getText();
+       
+        
         //this.socket=socket;
 
         new Thread(new Runnable() {
@@ -96,12 +105,12 @@ public class RecibirHilo implements Runnable {
                             // System.out.println("ack"); No detecta
                         } else {
                             if (convertir.deteccion(desentramado) == 1) {
-                                try {
-                                    sleep(500);
-                                } catch (InterruptedException ex) {
-                                    Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
-                                }
-                                salida.write('1');
+//                                try {
+//                                    sleep(500);
+//                                } catch (InterruptedException ex) {
+//                                    Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
+//                                }
+                                //salida.write('1');
                                 mensajesCorrectos.add(desentramado);
                                 view.txtVR.append(desentramado + "   Correcto\n");
                             } else {
@@ -116,7 +125,7 @@ public class RecibirHilo implements Runnable {
                                     } catch (InterruptedException ex) {
                                         Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
                                     }
-                                    salida.write('1');
+                                    //salida.write('1');
                                     String corregido = hamming(desentramado);
                                     mensajesCorrectos.add(corregido);
 
@@ -127,7 +136,7 @@ public class RecibirHilo implements Runnable {
                                     } catch (InterruptedException ex) {
                                         Logger.getLogger(RecibirHilo.class.getName()).log(Level.SEVERE, null, ex);
                                     }
-                                    salida.write('0');
+                                    //salida.write('0');
                                     view.txtVR.append(desentramado + "   Incorrecto\n");
                                 }
 
@@ -165,7 +174,7 @@ public class RecibirHilo implements Runnable {
         
         System.out.println(binarios.size());
 
-        if (view.ckImagen.isSelected()) {
+        if (view.ckArchivo.isSelected()) {
             //byte[] bFile=mensajesCorrectos.toArray();
             byte[] bFile= new byte[binarios.size()];
             int contador=0;

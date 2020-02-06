@@ -72,7 +72,18 @@ public class EnviarHilo implements Runnable {
                         salida.write(men.charAt(car));
                         sleep(delay);
                     }
+                    respuesta=0;
+                    view.txtEnvio.append("Trama " + contadorTramas + " enviada.\n");
+                    
+                    if(view.ckHamm.isSelected()){
+                        
+                    }else{
+                       view.txtEnvio.append("Trama enviada contiene error, retransmitiendo...\n");
+                       contadorTramas--; 
+                    }
+                    
                     error = 0;
+                    
                 } else if (randomNum == contadorTramas && error == 0 && perdida == 1) {
                     sleep(2000);
                     contadorTramas--;
@@ -85,16 +96,16 @@ public class EnviarHilo implements Runnable {
                         
                         sleep(delay);
                     }
-                    
+                    view.txtEnvio.append("Trama " + contadorTramas + " enviada.\n");
                 }
                 
                 sleep(delay);
 
                  
-                respuesta = entrada.read();
+                //respuesta = entrada.read();
                 
                 
-                view.txtEnvio.append("Trama " + contadorTramas + " enviada.\n");
+                
 
                 if (respuesta == '0') {
                     //controlTotal++;
